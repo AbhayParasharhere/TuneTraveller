@@ -27,7 +27,7 @@ def NBPrediction(X_train, X_test, y_train, y_test):
 
     # Predict and evaluate
     y_pred = nb.predict(X_test)
-    print("Accuracy:", accuracy_score(y_test, y_pred))
+    print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
     print(classification_report(y_test, y_pred))
     
     
@@ -82,13 +82,13 @@ def LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_
     print("** Results **", end="\n\n")
     print(f"Predicting {prediction_label} for {SAMPLE_SIZE} random songs:")
     print(table)
-    print(f"Accuracy of sample: {(correct_guesses / SAMPLE_SIZE) * 100}%")
+    print(f"Accuracy of sample: {(correct_guesses / SAMPLE_SIZE) * 100}%\n")
 
 
     # Full prediction output
-    """y_pred = lr.predict(X_test)
-    print("Accuracy:", accuracy_score(y_test, y_pred))
-    print(classification_report(y_test, y_pred))"""
+    y_pred = lr.predict(X_test)
+    print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
+    print(classification_report(y_test, y_pred))
 
 
 def main():
@@ -104,8 +104,20 @@ def main():
     setupColumns(data, chosen_decade, chosen_genre)
     
     X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-    
-    LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_label, chosen_column)
-    
-    
+
+    while True:
+        try:
+            user_input = int(input("Enter 1 for Logistic Regression \nEnter 2 for Naive Bayes\nEnter 3 to Quit\n\n"))
+            match user_input:
+                case 1:
+                    LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_label, chosen_column)
+                case 2:
+                    NBPrediction(X_train, X_test, y_train, y_test)
+                case 3:
+                    break
+                case _:
+                    print("Inavlid Number. Please enter a valid number")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+  
 main()
