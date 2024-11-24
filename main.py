@@ -151,8 +151,8 @@ def main():
                             chosen_column = CHOICES[3]
                             chosen_genre = GENRES[5]
                         case 8:
-                            print("You selected: Rock")
-                            chosen_column = CHOICES[5]
+                            print("You selected: Reggae")
+                            chosen_column = CHOICES[3]
                             chosen_genre = GENRES[6]
                         case _:
                             print("Invalid genre selection. Please enter a valid number.")
@@ -167,12 +167,11 @@ def main():
                 case 2:
                     print("Choose a decade:")
                     print("1. All Decades")
-                    print("2. Post 50's")
-                    print("3. Post 60's")
-                    print("4. Post 70's")
-                    print("5. Post 80's")
-                    print("6. Post 90's")
-                    print("7. Post 2000")
+                    print("2. Post 60's")
+                    print("2. Post 70's")
+                    print("4. Post 80's")
+                    print("5. Post 90's")
+                    print("6. Post 2000")
                     
                     decade_choice = int(input("\nEnter your choice: "))
                     chosen_genre = GENRES[0]
@@ -182,26 +181,22 @@ def main():
                             chosen_column = CHOICES[0]
                             chosen_decade = DECADES[0]
                         case 2:
-                            print("You selected: Post 50's")
-                            chosen_column = CHOICES[2]
-                            chosen_decade = DECADES[0]
-                        case 3:
                             print("You selected: Post 60's")
                             chosen_column = CHOICES[2]
                             chosen_decade = DECADES[1]
-                        case 4:
+                        case 3:
                             print("You selected: Post 70's")
                             chosen_column = CHOICES[2]
                             chosen_decade = DECADES[2]
-                        case 5:
+                        case 4:
                             print("You selected: Post 80's")
                             chosen_column = CHOICES[2]
                             chosen_decade = DECADES[3]
-                        case 6:
+                        case 5:
                             print("You selected: Post 90's")
                             chosen_column = CHOICES[2]
                             chosen_decade = DECADES[4]
-                        case 7:
+                        case 6:
                             print("You selected: Post 2000")
                             chosen_column = CHOICES[2]
                             chosen_decade = DECADES[5]
@@ -209,7 +204,7 @@ def main():
                             print("Invalid decade selection. Please enter a valid number.")
                             continue
                     
-                    if decade_choice in range(1, 8):
+                    if decade_choice in range(1, 7):
                         setupColumns(data, chosen_decade, chosen_genre)
                         label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
