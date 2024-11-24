@@ -86,34 +86,131 @@ def LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_
 
 
     # Full prediction output
-    y_pred = lr.predict(X_test)
-    print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
-    print(classification_report(y_test, y_pred))
+    #y_pred = lr.predict(X_test)
+    #print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
+    #print(classification_report(y_test, y_pred))
 
 
 def main():
     data = pd.read_csv(DATABASE_NAME)
-
-
-    chosen_genre = GENRES[4]
-    chosen_decade = DECADES[3]
-    chosen_column = CHOICES[2]
-
-    prediction_label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
     
-    setupColumns(data, chosen_decade, chosen_genre)
-    
-    X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-
+    print("Welcome to TuneTraveller!")
+    print("Get ready to dive into the world of music! 🎶")
+    print("In this interactive experience, we'll guess the genre or decade of 10 random songs based on their lyrics.")
     while True:
         try:
-            user_input = int(input("Enter 1 for Logistic Regression \nEnter 2 for Naive Bayes\nEnter 3 to Quit\n\n"))
+            print("\nMake a selection: ")
+            print("1. Genre")
+            print("2. Decade")
+            print("3. Quit")
+            
+            user_input = int(input("\nEnter your choice: "))
             match user_input:
                 case 1:
-                    LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_label, chosen_column)
+                    print("Choose a genre:")
+                    print("1. All Genres")
+                    print("2. Pop")
+                    print("3. Hip Hop")
+                    print("4. Blues")
+                    print("5. Jazz")
+                    print("6. Country")
+                    print("7. Rock")
+                    print("8. Reggae")
+                    
+                    genre_choice = int(input("\nEnter your choice: "))
+                    chosen_decade = DECADES[0]
+                    
+                    match genre_choice:
+                        case 1:
+                            print("You selected: All Genres")
+                            chosen_column = CHOICES[1]
+                            chosen_genre = GENRES[0]
+                        case 2:
+                            print("You selected: Pop")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[0]
+                            
+                        case 3:
+                            print("You selected: Hip Hop")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[3]
+                        case 4:
+                            print("You selected: Blues")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[2]
+                        case 5:
+                            print("You selected: Jazz")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[1]
+                        case 6:
+                            print("You selected: Country")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[4]
+                        case 7:
+                            print("You selected: Rock")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[5]
+                        case 8:
+                            print("You selected: Reggae")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[6]
+                        case _:
+                            print("Invalid genre selection. Please enter a valid number.")
+                            continue
+                    
+                    if genre_choice in range(1, 9):
+                        setupColumns(data, chosen_decade, chosen_genre)
+                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
+                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
+                        LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                
                 case 2:
-                    NBPrediction(X_train, X_test, y_train, y_test)
+                    print("Choose a decade:")
+                    print("1. All Decades")
+                    print("2. Post 60's")
+                    print("2. Post 70's")
+                    print("4. Post 80's")
+                    print("5. Post 90's")
+                    print("6. Post 2000")
+                    
+                    decade_choice = int(input("\nEnter your choice: "))
+                    chosen_genre = GENRES[0]
+                    match decade_choice:
+                        case 1:
+                            print("You selected: All Decades")
+                            chosen_column = CHOICES[0]
+                            chosen_decade = DECADES[0]
+                        case 2:
+                            print("You selected: Post 60's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[1]
+                        case 3:
+                            print("You selected: Post 70's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[2]
+                        case 4:
+                            print("You selected: Post 80's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[3]
+                        case 5:
+                            print("You selected: Post 90's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[4]
+                        case 6:
+                            print("You selected: Post 2000")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[5]
+                        case _:
+                            print("Invalid decade selection. Please enter a valid number.")
+                            continue
+                    
+                    if decade_choice in range(1, 7):
+                        setupColumns(data, chosen_decade, chosen_genre)
+                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
+                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
+                        LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
                 case 3:
+                    print("Goodbye!")
                     break
                 case _:
                     print("Inavlid Number. Please enter a valid number")
