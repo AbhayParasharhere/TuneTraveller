@@ -180,6 +180,264 @@ def PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, predict
     print(prediction[0])
     print("\n")
 
+def uploadRegression(data):
+    file_path = (input("\nEnter the file path: ")) #doesnt check if valid file yet
+    cleaned_lyrics = cleanLyrics(file_path)
+    print("Song uploaded!")
+
+    while True:
+        print("\nMake a selection: ")
+        print("1. Genre")
+        print("2. Decade")
+        print("3. Back to main menu")
+
+        user_choice = int(input("\nEnter your choice: "))
+
+        if user_choice == 3:
+            break
+
+        match user_choice:
+            case 1:
+                while True:
+                    print("Choose a genre:")
+                    print("1. All Genres")
+                    print("2. Pop")
+                    print("3. Hip Hop")
+                    print("4. Blues")
+                    print("5. Jazz")
+                    print("6. Country")
+                    print("7. Rock")
+                    print("8. Reggae")
+                    print("9. Back to menu")
+                    
+                    genre_choice = int(input("\nEnter your choice: "))
+                    chosen_decade = DECADES[0]
+
+                    if genre_choice == 9:
+                        break
+                    
+                    match genre_choice:
+                        case 1:
+                            print("You selected: All Genres")
+                            chosen_column = CHOICES[1]
+                            chosen_genre = GENRES[0]
+                        case 2:
+                            print("You selected: Is it Pop")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[0]
+                            
+                        case 3:
+                            print("You selected: Hip Hop")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[3]
+                        case 4:
+                            print("You selected: Blues")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[2]
+                        case 5:
+                            print("You selected: Jazz")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[1]
+                        case 6:
+                            print("You selected: Country")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[4]
+                        case 7:
+                            print("You selected: Rock")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[5]
+                        case 8:
+                            print("You selected: Raggae")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[6]
+                        case _:
+                            print("Invalid genre selection. Please enter a valid number.")
+                            continue
+                    
+                    if genre_choice in range(1, 9):
+                        setupColumns(data, chosen_decade, chosen_genre)
+                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
+                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
+                        PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
+                        
+            case 2:
+                while True:
+                    print("Choose a decade:")
+                    print("1. All Decades")
+                    print("2. Post 60's")
+                    print("3. Post 70's")
+                    print("4. Post 80's")
+                    print("5. Post 90's")
+                    print("6. Post 2000")
+                    print("7. Back to menu")
+                    
+                    decade_choice = int(input("\nEnter your choice: "))
+                    chosen_genre = GENRES[0]
+
+                    if decade_choice == 7:
+                        break
+
+                    match decade_choice:
+                        case 1:
+                            print("You selected: All Decades")
+                            chosen_column = CHOICES[0]
+                            chosen_decade = DECADES[0]
+                        case 2:
+                            print("You selected: Post 60's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[1]
+                        case 3:
+                            print("You selected: Post 70's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[2]
+                        case 4:
+                            print("You selected: Post 80's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[3]
+                        case 5:
+                            print("You selected: Post 90's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[4]
+                        case 6:
+                            print("You selected: Post 2000")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[5]
+                        case _:
+                            print("Invalid decade selection. Please enter a valid number.")
+                            continue
+                    
+                    if decade_choice in range(1, 7):
+                        setupColumns(data, chosen_decade, chosen_genre)
+                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
+                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
+                        PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
+            case _:
+                print("Invalid Number. Please enter a valid number")
+
+def guessRegression(data):
+    while True:
+        print("\nMake a selection: ")
+        print("1. Genre")
+        print("2. Decade")
+        print("3. Quit")
+        
+        user_input = int(input("\nEnter your choice: "))
+
+        if user_input == 3:
+            break
+
+        match user_input:
+            case 1:
+                while True:
+                    print("Choose a genre:")
+                    print("1. All Genres")
+                    print("2. Pop")
+                    print("3. Hip Hop")
+                    print("4. Blues")
+                    print("5. Jazz")
+                    print("6. Country")
+                    print("7. Rock")
+                    print("8. Reggae")
+                    
+                    genre_choice = int(input("\nEnter your choice: "))
+                    chosen_decade = DECADES[0]
+                    
+                    match genre_choice:
+                        case 1:
+                            print("You selected: All Genres")
+                            chosen_column = CHOICES[1]
+                            chosen_genre = GENRES[0]
+                        case 2:
+                            print("You selected: Pop")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[0]
+                            
+                        case 3:
+                            print("You selected: Hip Hop")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[3]
+                        case 4:
+                            print("You selected: Blues")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[2]
+                        case 5:
+                            print("You selected: Jazz")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[1]
+                        case 6:
+                            print("You selected: Country")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[4]
+                        case 7:
+                            print("You selected: Rock")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[5]
+                        case 8:
+                            print("You selected: Reggae")
+                            chosen_column = CHOICES[3]
+                            chosen_genre = GENRES[6]
+                        case _:
+                            print("Invalid genre selection. Please enter a valid number.")
+                            continue
+                    
+                    if genre_choice in range(1, 9):
+                        setupColumns(data, chosen_decade, chosen_genre)
+                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
+                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
+                        LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                        break
+                
+            case 2:
+                while True:
+                    print("Choose a decade:")
+                    print("1. All Decades")
+                    print("2. Post 60's")
+                    print("2. Post 70's")
+                    print("4. Post 80's")
+                    print("5. Post 90's")
+                    print("6. Post 2000")
+                    
+                    decade_choice = int(input("\nEnter your choice: "))
+                    chosen_genre = GENRES[0]
+                    match decade_choice:
+                        case 1:
+                            print("You selected: All Decades")
+                            chosen_column = CHOICES[0]
+                            chosen_decade = DECADES[0]
+                        case 2:
+                            print("You selected: Post 60's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[1]
+                        case 3:
+                            print("You selected: Post 70's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[2]
+                        case 4:
+                            print("You selected: Post 80's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[3]
+                        case 5:
+                            print("You selected: Post 90's")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[4]
+                        case 6:
+                            print("You selected: Post 2000")
+                            chosen_column = CHOICES[2]
+                            chosen_decade = DECADES[5]
+                        case _:
+                            print("Invalid decade selection. Please enter a valid number.")
+                            continue
+                    
+                    if decade_choice in range(1, 7):
+                        setupColumns(data, chosen_decade, chosen_genre)
+                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
+                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
+                        LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                        break
+            case _:
+                print("Invalid Number. Please enter a valid number")
+            
+
 
 def main():
     data = pd.read_csv(DATABASE_NAME)
@@ -198,255 +456,9 @@ def main():
             user_input = int(input("\nEnter your choice: "))
             match user_input:
                 case 1:
-                    file_path = (input("\nEnter the file path: ")) #doesnt check if valid file yet
-                    cleaned_lyrics = cleanLyrics(file_path)
-                    print("Song uploaded!")
-
-                    while True:
-                        print("\nMake a selection: ")
-                        print("1. Genre")
-                        print("2. Decade")
-                        print("3. Back to main menu")
-
-                        user_choice = int(input("\nEnter your choice: "))
-
-                        if user_choice == 3:
-                            break
-
-                        match user_choice:
-                            case 1:
-                                while True:
-                                    print("Choose a genre:")
-                                    print("1. All Genres")
-                                    print("2. Pop")
-                                    print("3. Hip Hop")
-                                    print("4. Blues")
-                                    print("5. Jazz")
-                                    print("6. Country")
-                                    print("7. Rock")
-                                    print("8. Reggae")
-                                    print("9. Back to menu")
-                                    
-                                    genre_choice = int(input("\nEnter your choice: "))
-                                    chosen_decade = DECADES[0]
-
-                                    if genre_choice == 9:
-                                        break
-                                    
-                                    match genre_choice:
-                                        case 1:
-                                            print("You selected: All Genres")
-                                            chosen_column = CHOICES[1]
-                                            chosen_genre = GENRES[0]
-                                        case 2:
-                                            print("You selected: Is it Pop")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[0]
-                                            
-                                        case 3:
-                                            print("You selected: Hip Hop")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[3]
-                                        case 4:
-                                            print("You selected: Blues")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[2]
-                                        case 5:
-                                            print("You selected: Jazz")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[1]
-                                        case 6:
-                                            print("You selected: Country")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[4]
-                                        case 7:
-                                            print("You selected: Rock")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[5]
-                                        case 8:
-                                            print("You selected: Raggae")
-                                            chosen_column = CHOICES[3]
-                                            chosen_genre = GENRES[6]
-                                        case _:
-                                            print("Invalid genre selection. Please enter a valid number.")
-                                            continue
-                                    
-                                    if genre_choice in range(1, 9):
-                                        setupColumns(data, chosen_decade, chosen_genre)
-                                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
-                                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                                        PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
-                                        
-                            case 2:
-                                while True:
-                                    print("Choose a decade:")
-                                    print("1. All Decades")
-                                    print("2. Post 60's")
-                                    print("3. Post 70's")
-                                    print("4. Post 80's")
-                                    print("5. Post 90's")
-                                    print("6. Post 2000")
-                                    print("7. Back to menu")
-                                    
-                                    decade_choice = int(input("\nEnter your choice: "))
-                                    chosen_genre = GENRES[0]
-
-                                    if decade_choice == 7:
-                                        break
-
-                                    match decade_choice:
-                                        case 1:
-                                            print("You selected: All Decades")
-                                            chosen_column = CHOICES[0]
-                                            chosen_decade = DECADES[0]
-                                        case 2:
-                                            print("You selected: Post 60's")
-                                            chosen_column = CHOICES[2]
-                                            chosen_decade = DECADES[1]
-                                        case 3:
-                                            print("You selected: Post 70's")
-                                            chosen_column = CHOICES[2]
-                                            chosen_decade = DECADES[2]
-                                        case 4:
-                                            print("You selected: Post 80's")
-                                            chosen_column = CHOICES[2]
-                                            chosen_decade = DECADES[3]
-                                        case 5:
-                                            print("You selected: Post 90's")
-                                            chosen_column = CHOICES[2]
-                                            chosen_decade = DECADES[4]
-                                        case 6:
-                                            print("You selected: Post 2000")
-                                            chosen_column = CHOICES[2]
-                                            chosen_decade = DECADES[5]
-                                        case _:
-                                            print("Invalid decade selection. Please enter a valid number.")
-                                            continue
-                                    
-                                    if decade_choice in range(1, 7):
-                                        setupColumns(data, chosen_decade, chosen_genre)
-                                        label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
-                                        X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                                        PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
-                            case _:
-                                print("Invalid Number. Please enter a valid number")
-
+                    uploadRegression(data)
                 case 2:
-                    print("\nMake a selection: ")
-                    print("1. Genre")
-                    print("2. Decade")
-                    print("3. Quit")
-                    
-                    user_input = int(input("\nEnter your choice: "))
-                    match user_input:
-                        case 1:
-                            print("Choose a genre:")
-                            print("1. All Genres")
-                            print("2. Pop")
-                            print("3. Hip Hop")
-                            print("4. Blues")
-                            print("5. Jazz")
-                            print("6. Country")
-                            print("7. Rock")
-                            print("8. Reggae")
-                            
-                            genre_choice = int(input("\nEnter your choice: "))
-                            chosen_decade = DECADES[0]
-                            
-                            match genre_choice:
-                                case 1:
-                                    print("You selected: All Genres")
-                                    chosen_column = CHOICES[1]
-                                    chosen_genre = GENRES[0]
-                                case 2:
-                                    print("You selected: Pop")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[0]
-                                    
-                                case 3:
-                                    print("You selected: Hip Hop")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[3]
-                                case 4:
-                                    print("You selected: Blues")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[2]
-                                case 5:
-                                    print("You selected: Jazz")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[1]
-                                case 6:
-                                    print("You selected: Country")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[4]
-                                case 7:
-                                    print("You selected: Rock")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[5]
-                                case 8:
-                                    print("You selected: Reggae")
-                                    chosen_column = CHOICES[3]
-                                    chosen_genre = GENRES[6]
-                                case _:
-                                    print("Invalid genre selection. Please enter a valid number.")
-                                    continue
-                            
-                            if genre_choice in range(1, 9):
-                                setupColumns(data, chosen_decade, chosen_genre)
-                                label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
-                                X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                                LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
-                        
-                        case 2:
-                            print("Choose a decade:")
-                            print("1. All Decades")
-                            print("2. Post 60's")
-                            print("2. Post 70's")
-                            print("4. Post 80's")
-                            print("5. Post 90's")
-                            print("6. Post 2000")
-                            
-                            decade_choice = int(input("\nEnter your choice: "))
-                            chosen_genre = GENRES[0]
-                            match decade_choice:
-                                case 1:
-                                    print("You selected: All Decades")
-                                    chosen_column = CHOICES[0]
-                                    chosen_decade = DECADES[0]
-                                case 2:
-                                    print("You selected: Post 60's")
-                                    chosen_column = CHOICES[2]
-                                    chosen_decade = DECADES[1]
-                                case 3:
-                                    print("You selected: Post 70's")
-                                    chosen_column = CHOICES[2]
-                                    chosen_decade = DECADES[2]
-                                case 4:
-                                    print("You selected: Post 80's")
-                                    chosen_column = CHOICES[2]
-                                    chosen_decade = DECADES[3]
-                                case 5:
-                                    print("You selected: Post 90's")
-                                    chosen_column = CHOICES[2]
-                                    chosen_decade = DECADES[4]
-                                case 6:
-                                    print("You selected: Post 2000")
-                                    chosen_column = CHOICES[2]
-                                    chosen_decade = DECADES[5]
-                                case _:
-                                    print("Invalid decade selection. Please enter a valid number.")
-                                    continue
-                            
-                            if decade_choice in range(1, 7):
-                                setupColumns(data, chosen_decade, chosen_genre)
-                                label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
-                                X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                                LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
-                        case 3:
-                            break
-                        case _:
-                            print("Invalid Number. Please enter a valid number")
-                            
+                    guessRegression(data)         
                 case 3:
                     topic_modeling(data)
                 case 4:
