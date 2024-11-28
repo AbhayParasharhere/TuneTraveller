@@ -136,6 +136,7 @@ def topic_modeling(data):
 
     table = columnar(rows, headers, no_borders=True, justify='l')
     print(table)
+    
 def cleanLyrics(file_path):
     stopWords = set(stopwords.words('english'))
     stemmer = SnowballStemmer('english')
@@ -191,7 +192,8 @@ def main():
             print("\nMake a selection: ")
             print("1. Upload your own lyrics")
             print("2. Use 10 random songs")
-            print("3. Quit")
+            print("3. Use topic Modeling to categorize the database")
+            print("4. Quit")
             
             user_input = int(input("\nEnter your choice: "))
             match user_input:
@@ -444,7 +446,10 @@ def main():
                             break
                         case _:
                             print("Invalid Number. Please enter a valid number")
+                            
                 case 3:
+                    topic_modeling(data)
+                case 4:
                     print("Goodbye!")
                     break
                 case _:
