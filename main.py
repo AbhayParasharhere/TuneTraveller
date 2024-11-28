@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from sklearn.metrics import classification_report, accuracy_score
 import random
 from columnar import columnar
 from math import floor
@@ -36,6 +36,8 @@ def NBPrediction(X_train, X_test, y_train, y_test):
     print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
     print(classification_report(y_test, y_pred))
     
+def press_enter():
+    input("Press Enter to continue...")
     
 def setupColumns(data, chosen_decade, chosen_genre):
     data['post_decade'] = (data['release_date'] >= chosen_decade)
@@ -54,7 +56,7 @@ def setupSets(data, chosen_column):
     return X_train, X_test, y_train, y_test, vectorizer
 
 
-def LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_label, chosen_column):
+def LRPredictionSample(data, X_train, y_train, vectorizer, prediction_label, chosen_column):
     # Train Logistic Regression
     lr = LogisticRegression(C=1, solver='lbfgs', max_iter=150, verbose=0)
     lr.fit(X_train, y_train)
@@ -90,52 +92,59 @@ def LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_
     print(table)
     print(f"Accuracy of sample: {(correct_guesses / SAMPLE_SIZE) * 100}%\n")
 
-
-    # Full prediction output
-    #y_pred = lr.predict(X_test)
-    #print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
-    #print(classification_report(y_test, y_pred))
+def LRPredictionAll(X_train, X_test, y_train, y_test):
+    # Train Logistic Regression
+    lr = LogisticRegression(C=1, solver='lbfgs', max_iter=150, verbose=0)
+    lr.fit(X_train, y_train)
+    
+    lr = LogisticRegression(C=1, solver='lbfgs', max_iter=150, verbose=0)
+    lr.fit(X_train, y_train)
+    
+    y_pred = lr.predict(X_test)
+    print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
+    print(classification_report(y_test, y_pred))
 
     
 def topic_modeling(data):
-    valid_data = False
-    while not valid_data:
+    while True:
         user_input = input("\nEnter the number of categories you'd like to generate: ")
         try:
             num_categories = int(user_input)
-            valid_data = True
+
+            count = CountVectorizer(stop_words='english', max_features=5000)
+            X = count.fit_transform(data['lyrics'].values)
+            
+            lda = LatentDirichletAllocation(n_components=num_categories, random_state=123, learning_method='batch')
+            X_topics = lda.fit_transform(X)
+
+            print(lda.components_.shape)
+            print('*' * 13)
+
+            n_top_words = 7
+            feature_names = count.get_feature_names_out()
+
+            for topic_idx, topic in enumerate(lda.components_):
+                    print(f'Topic {(topic_idx)}:')
+                    print(' '.join([feature_names[i]
+                    for i in topic.argsort()\
+                        [:-n_top_words - 1:-1]]))
+
+            print('*' * 13)
+                
+            data['topic_category'] = X_topics.argmax(axis=1)
+            genre_topic_counts = data.groupby(['genre', 'topic_category']).size().reset_index(name='count')
+            pivot_table = genre_topic_counts.pivot(index='genre', columns='topic_category', values='count')
+
+            headers = ["Genre"] + [f"Topic {col}" for col in pivot_table.columns]
+            rows = [[genre] + list(pivot_table.loc[genre]) for genre in pivot_table.index]
+
+            table = columnar(rows, headers, no_borders=True, justify='l')
+            print(table)
+            press_enter()
+            break
+            
         except ValueError as e:
             print("Sorry, that wasn't a valid number, please try again")
-
-    count = CountVectorizer(stop_words='english', max_features=5000)
-    X = count.fit_transform(data['lyrics'].values)
-    
-    lda = LatentDirichletAllocation(n_components=num_categories, random_state=123, learning_method='batch')
-    X_topics = lda.fit_transform(X)
-
-    print(lda.components_.shape)
-    print('*' * 13)
-
-    n_top_words = 7
-    feature_names = count.get_feature_names_out()
-
-    for topic_idx, topic in enumerate(lda.components_):
-            print(f'Topic {(topic_idx)}:')
-            print(' '.join([feature_names[i]
-            for i in topic.argsort()\
-                [:-n_top_words - 1:-1]]))
-
-    print('*' * 13)
-        
-    data['topic_category'] = X_topics.argmax(axis=1)
-    genre_topic_counts = data.groupby(['genre', 'topic_category']).size().reset_index(name='count')
-    pivot_table = genre_topic_counts.pivot(index='genre', columns='topic_category', values='count')
-
-    headers = ["Genre"] + [f"Topic {col}" for col in pivot_table.columns]
-    rows = [[genre] + list(pivot_table.loc[genre]) for genre in pivot_table.index]
-
-    table = columnar(rows, headers, no_borders=True, justify='l')
-    print(table)
     
 def cleanLyrics(file_path):
     stopWords = set(stopwords.words('english'))
@@ -259,6 +268,8 @@ def uploadRegression(data):
                         label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
                         PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
+                        press_enter()
+                        break
                         
             case 2:
                 while True:
@@ -311,10 +322,12 @@ def uploadRegression(data):
                         label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
                         PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
+                        press_enter()
+                        break
             case _:
                 print("Invalid Number. Please enter a valid number")
 
-def guessRegression(data):
+def guessRegression(data, useSmallSample):
     while True:
         print("\nMake a selection: ")
         print("1. Genre")
@@ -384,7 +397,11 @@ def guessRegression(data):
                         setupColumns(data, chosen_decade, chosen_genre)
                         label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                        LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                        if useSmallSample:
+                            LRPredictionSample(data, X_train, y_train, vectorizer, label, chosen_column)
+                        else:
+                            LRPredictionAll(X_train, X_test, y_train, y_test)
+                        press_enter()
                         break
                 
             case 2:
@@ -392,7 +409,7 @@ def guessRegression(data):
                     print("Choose a decade:")
                     print("1. All Decades")
                     print("2. Post 60's")
-                    print("2. Post 70's")
+                    print("3. Post 70's")
                     print("4. Post 80's")
                     print("5. Post 90's")
                     print("6. Post 2000")
@@ -432,7 +449,8 @@ def guessRegression(data):
                         setupColumns(data, chosen_decade, chosen_genre)
                         label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                        LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                        LRPredictionSample(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                        press_enter()
                         break
             case _:
                 print("Invalid Number. Please enter a valid number")
@@ -449,19 +467,22 @@ def main():
         try:
             print("\nMake a selection: ")
             print("1. Upload your own lyrics")
-            print("2. Use 10 random songs")
-            print("3. Use topic Modeling to categorize the database")
-            print("4. Quit")
+            print("2. Predict 10 random songs")
+            print("3. Predict the whole database")
+            print("4. Use topic Modeling to categorize the database")
+            print("5. Quit")
             
             user_input = int(input("\nEnter your choice: "))
             match user_input:
                 case 1:
                     uploadRegression(data)
                 case 2:
-                    guessRegression(data)         
+                    guessRegression(data, useSmallSample=True) 
                 case 3:
-                    topic_modeling(data)
+                    guessRegression(data, useSmallSample=False)
                 case 4:
+                    topic_modeling(data)
+                case 5:
                     print("Goodbye!")
                     break
                 case _:
