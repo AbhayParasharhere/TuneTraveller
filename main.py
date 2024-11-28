@@ -9,6 +9,8 @@ import random
 from columnar import columnar
 from math import floor
 from constants import *
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
 import re
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
@@ -94,6 +96,47 @@ def LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, prediction_
     #print("Overall Accuracy:", round(accuracy_score(y_test, y_pred), 5))
     #print(classification_report(y_test, y_pred))
 
+    
+def topic_modeling(data):
+    valid_data = False
+    while not valid_data:
+        user_input = input("\nEnter the number of categories you'd like to generate: ")
+        try:
+            num_categories = int(user_input)
+            valid_data = True
+        except ValueError as e:
+            print("Sorry, that wasn't a valid number, please try again")
+
+    count = CountVectorizer(stop_words='english', max_features=5000)
+    X = count.fit_transform(data['lyrics'].values)
+    
+    lda = LatentDirichletAllocation(n_components=num_categories, random_state=123, learning_method='batch')
+    X_topics = lda.fit_transform(X)
+
+    print(lda.components_.shape)
+    print('*' * 13)
+
+    n_top_words = 7
+    feature_names = count.get_feature_names_out()
+
+    for topic_idx, topic in enumerate(lda.components_):
+            print(f'Topic {(topic_idx)}:')
+            print(' '.join([feature_names[i]
+            for i in topic.argsort()\
+                [:-n_top_words - 1:-1]]))
+
+    print('*' * 13)
+        
+    data['topic_category'] = X_topics.argmax(axis=1)
+    genre_topic_counts = data.groupby(['genre', 'topic_category']).size().reset_index(name='count')
+    pivot_table = genre_topic_counts.pivot(index='genre', columns='topic_category', values='count')
+
+    headers = ["Genre"] + [f"Topic {col}" for col in pivot_table.columns]
+    rows = [[genre] + list(pivot_table.loc[genre]) for genre in pivot_table.index]
+
+    table = columnar(rows, headers, no_borders=True, justify='l')
+    print(table)
+    
 def cleanLyrics(file_path):
     stopWords = set(stopwords.words('english'))
     stemmer = SnowballStemmer('english')
@@ -149,7 +192,8 @@ def main():
             print("\nMake a selection: ")
             print("1. Upload your own lyrics")
             print("2. Use 10 random songs")
-            print("3. Quit")
+            print("3. Use topic Modeling to categorize the database")
+            print("4. Quit")
             
             user_input = int(input("\nEnter your choice: "))
             match user_input:
@@ -402,7 +446,10 @@ def main():
                             break
                         case _:
                             print("Invalid Number. Please enter a valid number")
+                            
                 case 3:
+                    topic_modeling(data)
+                case 4:
                     print("Goodbye!")
                     break
                 case _:
