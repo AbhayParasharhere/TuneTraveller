@@ -285,7 +285,7 @@ def main():
                                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
                                         PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column, cleaned_lyrics)
                             case _:
-                                print("Inavlid Number. Please enter a valid number")
+                                print("Invalid Number. Please enter a valid number")
 
                 case 2:
                     print("\nMake a selection: ")
@@ -399,15 +399,14 @@ def main():
                                 X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
                                 LRPrediction(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
                         case 3:
-                            #print("Goodbye!")
                             break
                         case _:
-                            print("Inavlid Number. Please enter a valid number")
+                            print("Invalid Number. Please enter a valid number")
                 case 3:
                     print("Goodbye!")
                     break
                 case _:
-                    print("Inavlid Number. Please enter a valid number")
+                    print("Invalid Number. Please enter a valid number")
         except ValueError:
             print("Invalid input. Please enter a valid number.")
   
