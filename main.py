@@ -358,7 +358,6 @@ def guessRegression(data, useSmallSample):
                     print("You selected: Pop")
                     chosen_column = CHOICES[3]
                     chosen_genre = GENRES[0]
-                    
                 elif genre_choice == 3:
                     print("You selected: Hip Hop")
                     chosen_column = CHOICES[3]
@@ -449,8 +448,7 @@ def guessRegression(data, useSmallSample):
                     press_enter()
                     break
         else:
-            print("Invalid Number. Please enter a valid number")
-            
+            print("Invalid Number. Please enter a valid number")           
 
 
 def main():
