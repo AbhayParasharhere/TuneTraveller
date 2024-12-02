@@ -449,7 +449,7 @@ def guessRegression(data, useSmallSample):
                         setupColumns(data, chosen_decade, chosen_genre)
                         label = getPredictionLabel(chosen_column, chosen_decade, chosen_genre)
                         X_train, X_test, y_train, y_test, vectorizer = setupSets(data, chosen_column)
-                        LRPredictionSample(data, X_train, X_test, y_train, y_test, vectorizer, label, chosen_column)
+                        LRPredictionSample(data, X_train, y_train, vectorizer, label, chosen_column)
                         press_enter()
                         break
             case _:
