@@ -18,6 +18,7 @@ from nltk.tokenize import word_tokenize
 
 
 def getPredictionLabel(column, decade, genre) -> str:
+    """Get the prediction label based on the column and chosen decade or genre."""
     if column == 'post_decade':
         return f"Post {decade}'s"
     elif column == 'isGenre':
@@ -27,6 +28,7 @@ def getPredictionLabel(column, decade, genre) -> str:
 
 
 def NBPrediction(X_train, X_test, y_train, y_test):
+    """Train a Naive Bayes classifier and evaluate its performance."""
     nb = MultinomialNB()
     nb.fit(X_train, y_train)
 
@@ -36,15 +38,18 @@ def NBPrediction(X_train, X_test, y_train, y_test):
     print(classification_report(y_test, y_pred))
     
 def press_enter():
+    """Wait for the user to press Enter to continue."""
     input("Press Enter to continue...")
     
 def setupColumns(data, chosen_decade, chosen_genre):
+    """Set up the data columns."""
     data['post_decade'] = (data['release_date'] >= chosen_decade)
     data['isGenre'] = (data['genre'] == chosen_genre)
     data['decade'] = data['release_date'].apply(lambda x: int(floor(int(x) / 10) * 10))
     
 
 def setupSets(data, chosen_column):
+    """Set up the training and test sets."""
     # Set up data columns
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(data['lyrics'])
@@ -56,6 +61,7 @@ def setupSets(data, chosen_column):
 
 
 def LRPredictionSample(data, X_train, y_train, vectorizer, prediction_label, chosen_column):
+    """Train a Logistic Regression classifier and evaluate its performance."""
     # Train Logistic Regression
     lr = LogisticRegression(C=1, solver='lbfgs', max_iter=150, verbose=0)
     lr.fit(X_train, y_train)
@@ -92,6 +98,7 @@ def LRPredictionSample(data, X_train, y_train, vectorizer, prediction_label, cho
     print(f"Accuracy of sample: {(correct_guesses / SAMPLE_SIZE) * 100}%\n")
 
 def LRPredictionAll(X_train, X_test, y_train, y_test):
+    """Train a Logistic Regression classifier and evaluate its performance."""
     # Train Logistic Regression
     lr = LogisticRegression(C=1, solver='lbfgs', max_iter=150, verbose=0)
     lr.fit(X_train, y_train)
@@ -105,6 +112,7 @@ def LRPredictionAll(X_train, X_test, y_train, y_test):
 
     
 def topic_modeling(data):
+    """Use topic modeling to categorize the database."""
     while True:
         user_input = input("\nEnter the number of categories you'd like to generate: ")
         try:
@@ -146,6 +154,7 @@ def topic_modeling(data):
             print("Sorry, that wasn't a valid number, please try again")
     
 def cleanLyrics(file_path):
+    """Clean lyrics by removing punctuation, converting to lowercase, removing stop words, and stemming."""
     stopWords = set(stopwords.words('english'))
     stemmer = SnowballStemmer('english')
     
@@ -174,6 +183,8 @@ def cleanLyrics(file_path):
     
     
 def PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, prediction_label, chosen_column, clean_lyrics):
+    """Train a Logistic Regression classifier and evaluate its performance."""
+
     # Vectorize the cleaned lyrics
     cleaned_lyrics_vector = vectorizer.transform([clean_lyrics])
     
@@ -189,6 +200,8 @@ def PredictionUpload(data, X_train, X_test, y_train, y_test, vectorizer, predict
     print("\n")
 
 def uploadRegression(data):
+    """Upload lyrics and predict genre or decade."""
+    
     file_path = (input("\nEnter the file path: ")) #doesnt check if valid file yet
     cleaned_lyrics = cleanLyrics(file_path)
     print("Song uploaded!")
@@ -324,6 +337,7 @@ def uploadRegression(data):
                 print("Invalid Number. Please enter a valid number")
 
 def guessRegression(data, useSmallSample):
+    """Guess the genre or decade of 10 random songs based on their lyrics."""
     while True:
         print("\nMake a selection: ")
         print("1. Genre")
@@ -452,6 +466,7 @@ def guessRegression(data, useSmallSample):
 
 
 def main():
+    """Main function to run the program."""
     data = pd.read_csv(DATABASE_NAME)
     
     print("Welcome to TuneTraveller!")
