@@ -18,21 +18,26 @@ TuneTraveller is a Python-based music analysis tool that uses machine learning t
 - columnar
 - numpy
 
-## Installation
+## Installation/Setup
 
-1. Clone the repository
-2. Install the required dependencies:
+- Clone the repository
+- Create the virtual environment:
 
 ```bash
-pip install pandas scikit-learn nltk columnar numpy
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-3. Download required NLTK data:
+- Install the required dependencies:
 
-```python
-import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+```bash
+pip install -r requirements.txt
+```
+
+- Download required NLTK data:
+
+```bash
+python3 extra.py
 ```
 
 ## Usage
@@ -43,7 +48,7 @@ Run the main script to start the interactive interface:
 python main.py
 ```
 
-### Main Menu Options:
+### Main Menu Options
 
 1. **Upload your own lyrics**: Analyze a text file containing song lyrics
 2. **Predict 10 random songs**: Test the model on a small sample set
@@ -51,7 +56,7 @@ python main.py
 4. **Use topic Modeling**: Generate thematic categories across the database
 5. **Quit**: Exit the program
 
-### Prediction Options:
+### Prediction Options
 
 - **Genre Classification**:
 
